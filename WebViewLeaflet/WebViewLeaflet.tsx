@@ -1,6 +1,6 @@
 import * as React from "react";
 import { WebView } from "react-native-webview";
-import RNFS from 'react-native-fs';
+import RNFS from "react-native-fs";
 import WebViewLeafletView from "./WebViewLeaflet.view";
 import {
   MapMarker,
@@ -10,13 +10,12 @@ import {
   MapLayer,
   MapShape,
   OwnPositionMarker,
-  OWN_POSTION_MARKER_ID
+  OWN_POSTION_MARKER_ID,
 } from "./models";
 import { ActivityOverlay } from "./ActivityOverlay";
 import { LatLng } from "react-leaflet";
 import isEqual from "lodash.isequal";
 // @ts-ignore node types
-const INDEX_FILE_PATH = require(`./assets/index.html`);
 
 export interface WebViewLeafletProps {
   backgroundColor?: string;
@@ -41,7 +40,6 @@ interface State {
   isLoading: boolean;
 }
 
-
 class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private webViewRef: any;
   static defaultProps = {
@@ -53,7 +51,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     },
     onError: (syntheticEvent: any) => {},
     onLoadEnd: () => {},
-    onLoadStart: () => {}
+    onLoadStart: () => {},
   };
 
   constructor(props) {
@@ -62,7 +60,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       debugMessages: [],
       isLoading: null,
       mapCurrentCenterPosition: null,
-      webviewContent: null
+      webviewContent: null,
     };
     this.webViewRef = null;
   }
@@ -72,29 +70,24 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   };
 
   private loadHTMLFile = async () => {
+    await RNFS.readFileAssets("index.html") // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+      .then((result) => {
+        // console.log('GOT RESULT', result);
+        if (result) {
+          try {
+            // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
+            let fileString: string = result;
 
-    await RNFS.readFileAssets('index.html') // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-  .then((result) => {
-    // console.log('GOT RESULT', result);
-    if(result){
-      try {
-      // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      let fileString: string = result;
-
-      this.setState({ webviewContent: fileString });
-    } catch (error) {
-      console.warn(error);
-      console.warn("Unable to resolve index file");
-    }
-    }
-
-
-  })
-  .catch((err) => {
-    console.log(err.message, err.code);
-  });
-
-
+            this.setState({ webviewContent: fileString });
+          } catch (error) {
+            console.warn(error);
+            console.warn("Unable to resolve index file");
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err.message, err.code);
+      });
   };
 
   componentDidUpdate = (prevProps: WebViewLeafletProps, prevState: State) => {
@@ -105,7 +98,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       mapLayers,
       mapShapes,
       ownPositionMarker,
-      zoom
+      zoom,
     } = this.props;
 
     if (!prevState.webviewContent && webviewContent) {
@@ -137,10 +130,10 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
 
     if (!isEqual(mapCenterPosition, mapCurrentCenterPosition)) {
       this.setState({
-        mapCurrentCenterPosition: mapCenterPosition
+        mapCurrentCenterPosition: mapCenterPosition,
       });
       this.sendMessage({
-        mapCenterPosition
+        mapCenterPosition,
       });
     }
   };
@@ -156,7 +149,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     }
     if (message.event === WebViewLeafletEvents.ON_MOVE_END) {
       this.setState({
-        mapCurrentCenterPosition: message.payload.mapCenterPosition
+        mapCurrentCenterPosition: message.payload.mapCenterPosition,
       });
     }
     onMessageReceived(message);
@@ -180,7 +173,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       mapShapes,
       mapCenterPosition,
       ownPositionMarker,
-      zoom = 7
+      zoom = 7,
     } = this.props;
     if (mapLayers) {
       startupMessage.mapLayers = mapLayers;
@@ -197,7 +190,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     if (ownPositionMarker) {
       startupMessage.ownPositionMarker = {
         ...ownPositionMarker,
-        id: OWN_POSTION_MARKER_ID
+        id: OWN_POSTION_MARKER_ID,
       };
     }
 
@@ -214,7 +207,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   // Add a new debug message to the debug message array
   private updateDebugMessages = (debugMessage: string) => {
     this.setState({
-      debugMessages: [...this.state.debugMessages, debugMessage]
+      debugMessages: [...this.state.debugMessages, debugMessage],
     });
   };
 
@@ -236,7 +229,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     const {
       backgroundColor,
       doShowDebugMessages,
-      loadingIndicator
+      loadingIndicator,
     } = this.props;
 
     if (webviewContent) {
