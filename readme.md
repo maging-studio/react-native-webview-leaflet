@@ -2,7 +2,7 @@
 
 ### FIX Working on android without expo
 
-This fix requires the html file from using react-native-fs
+This fix requires the html file from android assets using react-native-fs
 
 ```
 ~/yourProject/android/app/src/main/assets/index.html
