@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { Asset } from 'expo-asset';
 import DebugMessageBox from './DebugMessageBox';
 import { WebViewError } from 'react-native-webview/lib/WebViewTypes';
 

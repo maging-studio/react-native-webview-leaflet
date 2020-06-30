@@ -1,3 +1,17 @@
+# React Native Webview Leaflet by Aristech
+
+### FIX Working on android without expo
+
+This fix requires the html file from using react-native-fs
+
+```
+~/yourProject/android/app/src/main/assets/index.html
+```
+
+copy or link it to that direction
+
+### Everything else should be the same as the original package
+
 # React Native Webview Leaflet V5
 
 ## A Leaflet map component with no native code for React Native applications
@@ -45,7 +59,7 @@ A typical example is shown below:
 
 ```javascript
 <WebViewLeaflet
-  ref={component => (this.webViewLeaflet = component)}
+  ref={(component) => (this.webViewLeaflet = component)}
   // The rest of your props, see the list below
 />
 ```

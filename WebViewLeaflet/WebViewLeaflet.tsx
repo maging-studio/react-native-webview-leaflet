@@ -1,7 +1,6 @@
 import * as React from "react";
 import { WebView } from "react-native-webview";
-import AssetUtils from "expo-asset-utils";
-import { Asset } from "expo-asset";
+import RNFS from 'react-native-fs';
 import WebViewLeafletView from "./WebViewLeaflet.view";
 import {
   MapMarker,
@@ -14,7 +13,6 @@ import {
   OWN_POSTION_MARKER_ID
 } from "./models";
 import { ActivityOverlay } from "./ActivityOverlay";
-import * as FileSystem from "expo-file-system";
 import { LatLng } from "react-leaflet";
 import isEqual from "lodash.isequal";
 // @ts-ignore node types
@@ -42,6 +40,7 @@ interface State {
   webviewContent: string;
   isLoading: boolean;
 }
+
 
 class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private webViewRef: any;
@@ -73,17 +72,29 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   };
 
   private loadHTMLFile = async () => {
-    try {
-      let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      let fileString: string = await FileSystem.readAsStringAsync(
-        asset.localUri
-      );
+
+    await RNFS.readFileAssets('index.html') // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+  .then((result) => {
+    // console.log('GOT RESULT', result);
+    if(result){
+      try {
+      // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
+      let fileString: string = result;
 
       this.setState({ webviewContent: fileString });
     } catch (error) {
       console.warn(error);
       console.warn("Unable to resolve index file");
     }
+    }
+
+
+  })
+  .catch((err) => {
+    console.log(err.message, err.code);
+  });
+
+
   };
 
   componentDidUpdate = (prevProps: WebViewLeafletProps, prevState: State) => {
