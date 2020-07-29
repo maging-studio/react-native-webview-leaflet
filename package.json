@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "main": "WebViewLeaflet/index.js",
+  "main": "WebViewLeaflet/index.ts",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-run": "^1.7.1"
